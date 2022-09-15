@@ -4,7 +4,7 @@
   "description": "Code challenge for hiring interviews; see https://...",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "start": "concurrently 'npm run client' 'npm run server'",
     "client": "webpack --watch --mode development --entry ./client/index.js",
     "server": "nodemon server/index.js"

@@ -1,3 +1,4 @@
 *.md
 .eslintrc.js
 dist
+.DS_Store

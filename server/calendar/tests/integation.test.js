@@ -1,9 +1,11 @@
-const request = require('supertest');
-const router = require('./calendar');
-const express = require('express');
+/**
+ * Tests for calendar API
+ * 
+ * @group integration
+ */
 
-const app = express();
-app.use(router);
+const request = require('supertest');
+const app = require('../../app')
 
 describe('GET /api/calendar', () => {
   it('returns timeslots', async () => {

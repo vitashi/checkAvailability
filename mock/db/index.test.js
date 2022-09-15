@@ -1,3 +1,9 @@
+/**
+ * Tests for mockDB
+ * 
+ * @group db
+ */
+
 const moment = require('moment');
 const db = require('./index');
 

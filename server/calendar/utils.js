@@ -12,5 +12,6 @@ const userIDExists = (userID) => {
 }
 
 module.exports = {
-    validateHostUserID
+    validateHostUserID,
+    userIDExists
 }

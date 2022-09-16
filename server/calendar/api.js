@@ -74,13 +74,13 @@ const getEventsForUser = (hostUserId) => {
     resultObject.response = trialJsonResult
 
   }catch(error){
-    console.error(error)
+    console.error(error.name, error.message)
     if (error instanceof errors.CalendarAPIErrors){
-      resultObject.status = error.httpStatusCode,
-      resultObject.response = error.message
+      resultObject.status = error.httpStatusCode;
+      resultObject.response = error.message;
     }else{
-      resultObject.status = StatusCodes.INTERNAL_SERVER_ERROR,
-      resultObject.response = "An error occurred while fulfilling the request"
+      resultObject.status = StatusCodes.INTERNAL_SERVER_ERROR;
+      resultObject.response = "An error occurred while fulfilling the request";
     }
   }
 

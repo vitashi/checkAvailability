@@ -3,6 +3,11 @@
  * @module api
  */
 
+const { validateHostUserID } = require('./utils');
+const { StatusCodes } = require('http-status-codes');
+const errors = require('./errors');
+
+
 const trialJsonResult = {
   name: 'Eng Test User',
   timeslotLengthMin: 60,
@@ -56,9 +61,31 @@ const trialJsonResult = {
   ],
 }
 
-const getEventsForUser = (req, res) => {
-  const { hostUserId } = req.query;
-  res.json(trialJsonResult);
+const getEventsForUser = (hostUserId) => {
+
+  const resultObject = {
+    status: null,
+    response: null
+  }
+
+  try{
+    validateHostUserID(hostUserId)
+    resultObject.status = StatusCodes.OK
+    resultObject.response = trialJsonResult
+
+  }catch(error){
+    console.error(error)
+    if (error instanceof errors.CalendarAPIErrors){
+      resultObject.status = error.httpStatusCode,
+      resultObject.response = error.message
+    }else{
+      resultObject.status = StatusCodes.INTERNAL_SERVER_ERROR,
+      resultObject.response = "An error occurred while fulfilling the request"
+    }
+  }
+
+  return resultObject
+ 
 }
 
 module.exports = getEventsForUser;

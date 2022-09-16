@@ -5,15 +5,15 @@
  */
 
 const request = require('supertest');
-const HTTPStatusCodes = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 const app = require('../../app')
 
-const statusCodes = HTTPStatusCodes.StatusCodes
 
 describe('GET /api/calendar', () => {
   it('returns timeslots', async () => {
     const req = await request(app)
       .get('/api/calendar')
+      .query('hostUserId=host_user_1')
       .expect('Content-Type', /json/)
       .expect(200);
 
@@ -21,11 +21,12 @@ describe('GET /api/calendar', () => {
       timeslots: expect.arrayContaining(['2021-11-24T14:00:00.000']),
     });
   });
-  it('returns 404 and json body if the hostUserID is not passed', async () => {
+
+  it('returns 400 and json body if the hostUserID is not passed', async () => {
     const response = await request(app)
       .get('/api/calendar')
       .expect('Content-Type', /json/);
 
-    expect(response.statusCode).toEqual(statusCodes.NOT_FOUND);
+    expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST);
   })
 });

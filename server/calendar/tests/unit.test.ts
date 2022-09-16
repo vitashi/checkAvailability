@@ -71,6 +71,8 @@ describe("getEventsForUser tests", () => {
 describe("validateHostUserID tests", () => {
 
     const validator = new HostUserIDValidator()
+
+    afterEach(()=> jest.restoreAllMocks())
     
     it ("A null host user id throws a MalformedQueryError", () => {
         expect(() => validator.validate(undefined)).toThrow(MalformedQueryError)
@@ -80,5 +82,10 @@ describe("validateHostUserID tests", () => {
         const hostUserID = "non-existant-user"
         jest.spyOn(validator, "userIDExists").mockReturnValue(false)
         expect(() => validator.validate(hostUserID)).toThrow(HostUserIDNotFoundError)
+    })
+
+    it ("An existing user validation returns void for success", () => {
+        const hostUserID = "host_user_1"
+        expect(validator.validate(hostUserID)).toBeUndefined()
     })
 })

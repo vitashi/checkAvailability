@@ -3,12 +3,13 @@
  * @module api
  */
 
-const { validateHostUserID } = require('./utils');
-const { StatusCodes } = require('http-status-codes');
-const errors = require('./errors');
+import {StatusCodes} from 'http-status-codes';
+import { IAPIResult } from '../types';
+import {CalendarAPIErrors} from "./errors"
+import { IResultObject } from './types';
+import HostUserIDValidator from './validator';
 
-
-const trialJsonResult = {
+const trialJsonResult: IAPIResult = {
   name: 'Eng Test User',
   timeslotLengthMin: 60,
   // This is mock data that you should remove and replace with `db.calendar.findEventsForUser`.
@@ -61,17 +62,19 @@ const trialJsonResult = {
   ],
 }
 
-const getEventsForUser = (hostUserId) => {
+export const getEventsForUser = (hostUserId?: string): IResultObject => {
   try{
     
-    const resultObject = {
-      status: null,
-      response: null
+    const resultObject: IResultObject = {
+      status: StatusCodes.OK,
+      message: "Success",
     }
 
-    validateHostUserID(hostUserId)
+    const hostUserIdValidator = new HostUserIDValidator()
+    hostUserIdValidator.validate(hostUserId)
+
     resultObject.status = StatusCodes.OK
-    resultObject.response = trialJsonResult
+    resultObject.data = trialJsonResult
     return resultObject
 
   }catch(error){
@@ -80,23 +83,22 @@ const getEventsForUser = (hostUserId) => {
  
 }
 
-const handleErrors = (error) => {
-  console.error(error.name, error.message)
+export const handleErrors = (error: unknown) => {
 
-  const resultObject = {
-    status: null,
-    response: null
+  const resultObject: IResultObject = {
+    status: StatusCodes.INTERNAL_SERVER_ERROR,
+    message: "An error occurred while fulfilling the request"
   }
 
-  if (error instanceof errors.CalendarAPIErrors){
+  if (error instanceof CalendarAPIErrors){
+    console.error(error.name, error.message)
     resultObject.status = error.httpStatusCode;
-    resultObject.response = error.message;
+    resultObject.message = error.message;
   }else{
+    console.error(error)
     resultObject.status = StatusCodes.INTERNAL_SERVER_ERROR;
-    resultObject.response = "An error occurred while fulfilling the request";
+    resultObject.message = "An error occurred while fulfilling the request";
   }
 
   return resultObject
 }
-
-module.exports = getEventsForUser;

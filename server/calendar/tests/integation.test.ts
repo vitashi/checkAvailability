@@ -4,9 +4,9 @@
  * @group integration
  */
 
-const request = require('supertest');
-const { StatusCodes } = require('http-status-codes');
-const app = require('../../app')
+import request from "supertest";
+import {app} from "../../app";
+import {StatusCodes} from 'http-status-codes';
 
 
 describe('GET /api/calendar', () => {
@@ -29,4 +29,15 @@ describe('GET /api/calendar', () => {
 
     expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST);
   })
+
+  // it('returns 404 and json body if the hostUserID passed does not exist in the db', async () => {
+  //   const spy = jest.spyOn(utils, "userIDExists").mockResolvedValue(false)
+  //   const response = await request(app)
+  //     .get('/api/calendar')
+  //     .query('hostUserId=host_user_2')
+  //     .expect('Content-Type', /json/);
+
+  //   expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND);
+  // })
+
 });

@@ -14,7 +14,6 @@ export class MalformedQueryError extends CalendarAPIErrors {
     super(message);
     this.name = "MalformedQueryError";
     this.httpStatusCode = StatusCodes.BAD_REQUEST
-
   }
 }
 

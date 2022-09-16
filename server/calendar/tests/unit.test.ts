@@ -7,7 +7,6 @@
 import {StatusCodes} from 'http-status-codes';
 import { handleErrors, getEventsForUser } from '../api';
 import { MalformedQueryError, HostUserIDNotFoundError } from '../errors';
-import { validateHostUserID,  userIDExists} from '../utils';
 import HostUserIDValidator from '../validator';
 
 

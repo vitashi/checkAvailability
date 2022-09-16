@@ -62,30 +62,41 @@ const trialJsonResult = {
 }
 
 const getEventsForUser = (hostUserId) => {
+  try{
+    
+    const resultObject = {
+      status: null,
+      response: null
+    }
+
+    validateHostUserID(hostUserId)
+    resultObject.status = StatusCodes.OK
+    resultObject.response = trialJsonResult
+    return resultObject
+
+  }catch(error){
+    return handleErrors(error)
+  }
+ 
+}
+
+const handleErrors = (error) => {
+  console.error(error.name, error.message)
 
   const resultObject = {
     status: null,
     response: null
   }
 
-  try{
-    validateHostUserID(hostUserId)
-    resultObject.status = StatusCodes.OK
-    resultObject.response = trialJsonResult
-
-  }catch(error){
-    console.error(error.name, error.message)
-    if (error instanceof errors.CalendarAPIErrors){
-      resultObject.status = error.httpStatusCode;
-      resultObject.response = error.message;
-    }else{
-      resultObject.status = StatusCodes.INTERNAL_SERVER_ERROR;
-      resultObject.response = "An error occurred while fulfilling the request";
-    }
+  if (error instanceof errors.CalendarAPIErrors){
+    resultObject.status = error.httpStatusCode;
+    resultObject.response = error.message;
+  }else{
+    resultObject.status = StatusCodes.INTERNAL_SERVER_ERROR;
+    resultObject.response = "An error occurred while fulfilling the request";
   }
 
   return resultObject
- 
 }
 
 module.exports = getEventsForUser;

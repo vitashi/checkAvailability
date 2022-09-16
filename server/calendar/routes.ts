@@ -15,6 +15,7 @@ routes.get('/api/calendar', (request: express.Request, response: express.Respons
   const apiResult = getEventsForUser(userID)
   response.status(apiResult.status)
   .json(apiResult.data);
+  console.log(`HostUserID: ${hostUserId}, statusCode: ${apiResult.status}, resultMessage: ${apiResult.message}`)
   
 })
 

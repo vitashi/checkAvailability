@@ -83,7 +83,7 @@ export const getEventsForUser = (hostUserId?: string): IResultObject => {
  
 }
 
-export const handleErrors = (error: unknown) => {
+export const handleErrors = (error: unknown): IResultObject => {
 
   const resultObject: IResultObject = {
     status: StatusCodes.INTERNAL_SERVER_ERROR,

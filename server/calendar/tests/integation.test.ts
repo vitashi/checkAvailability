@@ -26,7 +26,7 @@ describe('GET /api/calendar', () => {
       .expect(200);
 
     expect(req.body).toMatchObject({
-      timeslots: expect.arrayContaining(['2021-11-24T14:00:00.000']),
+      timeslots: expect.arrayContaining(["2022-09-20T13:30:00.000"]),
     });
   });
 

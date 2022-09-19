@@ -5,8 +5,10 @@
  */
  
 import {StatusCodes} from 'http-status-codes';
-import { handleErrors, getEventsForUser } from '../api';
+import moment from 'moment';
+import { handleErrors, getAvailability } from '../api';
 import { MalformedQueryError, HostUserIDNotFoundError } from '../errors';
+import { fillTimeSlots, getSavedEvents } from '../utils';
 import HostUserIDValidator from '../validator';
 
 
@@ -41,17 +43,17 @@ describe("Error handling logic", () => {
  
 })
 
-describe("getEventsForUser tests", () => {
+describe("getAvailability tests", () => {
     it ("returns the correct object in a successfull scenario", async () => {
         const hostUserID = "host_user_1"
-        const response = await getEventsForUser(hostUserID)
+        const response = await getAvailability(hostUserID)
         expect(response).toHaveProperty('status')
         expect(response).toHaveProperty('message')
         expect(response.status).toEqual(StatusCodes.OK)
     })
 
     it ("returns the correct object in a failure scenario", async () => {
-        const response = await getEventsForUser(undefined)
+        const response = await getAvailability(undefined)
         expect(response).toHaveProperty('status')
         expect(response).toHaveProperty('message')
         expect(response.status).toEqual(StatusCodes.BAD_REQUEST)
@@ -59,7 +61,7 @@ describe("getEventsForUser tests", () => {
 
     it ("A successful request returns correct response schema in the response key", async () => {
         const hostUserID = "host_user_1"
-        const response = await getEventsForUser(hostUserID)
+        const response = await getAvailability(hostUserID)
         expect(response.status).toEqual(StatusCodes.OK)
         expect(response.data).toHaveProperty('name')
         expect(response.data).toHaveProperty('timeslotLengthMin')
@@ -87,5 +89,51 @@ describe("validateHostUserID tests", () => {
     it ("An existing user validation returns void for success", async () => {
         const hostUserID = "host_user_1"
         expect(await validator.validate(hostUserID)).toBeUndefined()
+    })
+})
+
+describe("getSavedEvents", () => {
+    it("returns a sorted array of events saved in the db", async() => {
+        const userID = 'userID'
+        const db = require("db");
+        jest.spyOn(db.calendar, "findEventsForUser").mockResolvedValue(
+            [
+                {start: "2021-09-11T16:00:00.000", end: "2021-09-11T17:00:00.000"},
+                {start: "2021-09-22T09:00:00.000", end: "2021-09-22T17:00:00.000"},
+                {start: "2021-09-19T10:00:00.000", end: "2021-09-19T17:00:00.000"},
+                {start: "2021-09-30T11:00:00.000", end: "2021-09-30T17:00:00.000"},
+                {start: "2021-09-05T14:00:00.000", end: "2021-09-05T17:00:00.000"},
+                {start: "2021-09-15T15:50:00.000", end: "2021-09-15T17:00:00.000"}
+            ]
+        )
+
+        const events = await getSavedEvents(userID)
+        expect(events[0]).toMatchObject({start: "2021-09-05T14:00:00.000", end: "2021-09-05T17:00:00.000"})
+    })
+})
+
+
+describe("fillTimeSlots", () => {
+    it("returns an empty array if the time difference is less than one hour", async() => {
+        const startTime = moment("2021-09-11T16:00:00.000")
+        const stopTime = startTime.add(15, 'minutes')
+
+        const slotsArray = await fillTimeSlots(startTime, stopTime)
+
+        expect(slotsArray.length).toEqual(0)
+    })
+
+    it("inserts one timeslot when the diff between start and stop is 3 hours", async() => {
+        const startTime = moment("2021-09-11T12:00:00.000")
+        const stopTime = startTime.clone().add(3, 'hours')
+        
+        const slotsArray = await fillTimeSlots(startTime, stopTime)
+        
+        expect(slotsArray.length).toEqual(3)
+        expect(slotsArray).toMatchObject([
+            "2021-09-11T12:00:00.000",
+            "2021-09-11T13:00:00.000",
+            "2021-09-11T14:00:00.000",
+        ])
     })
 })

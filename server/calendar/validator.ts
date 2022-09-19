@@ -1,5 +1,5 @@
 import { users } from "../app"
-import BaseValidator from "../baseValidator"
+import BaseValidator from "../common/baseValidator"
 import { User } from "../users/store"
 import {MalformedQueryError, HostUserIDNotFoundError} from "./errors"
 

@@ -8,24 +8,15 @@ import request from "supertest";
 import {app} from "../../app";
 import {StatusCodes} from 'http-status-codes';
 
-describe('GET /', () => {
-  it("returns an HTML file", async () => {
-    const req = await request(app)
-      .get('/')
-      .expect('Content-Type', "text/html; charset=UTF-8")
-      .expect(200);
-  })
-})
-
 describe('GET /api/calendar', () => {
   it('returns timeslots', async () => {
-    const req = await request(app)
+    const response = await request(app)
       .get('/api/calendar')
       .query('hostUserId=host_user_1')
       .expect('Content-Type', /json/)
       .expect(200);
 
-    expect(req.body).toMatchObject({
+    expect(response.body).toMatchObject({
       timeslots: expect.arrayContaining(["2022-09-20T13:30:00.000"]),
     });
   });

@@ -8,15 +8,15 @@ import request from "supertest";
 import {app} from "../../app";
 import {StatusCodes} from 'http-status-codes';
 
-describe('GET /', () => {
-  it("returns an HTML file", async () => {
-    const req = await request(app)
-      .get('/')
-      // .expect('Content-Type', "text/html; charset=utf-8")
-      .expect(200);
-    console.log(req.headers, "==========>")
-  })
-})
+// describe('GET /', () => {
+//   it("returns an HTML file", async () => {
+//     const req = await request(app)
+//       .get('/')
+//       // .expect('Content-Type', "text/html; charset=utf-8")
+//       .expect(200);
+//     console.log(req.headers, "==========>")
+//   })
+// })
 
 describe('GET /api/calendar', () => {
   it('returns timeslots', async () => {

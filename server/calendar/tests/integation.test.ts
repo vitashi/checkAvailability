@@ -8,15 +8,6 @@ import request from "supertest";
 import {app} from "../../app";
 import {StatusCodes} from 'http-status-codes';
 
-describe('GET /', () => {
-  it("returns an HTML file", async () => {
-    const response = await request(app)
-      .get('/')
-      .expect(200);
-    expect(response.headers['content-type'].toUpperCase()).toEqual("text/html; charset=utf-8".toUpperCase())
-  })
-})
-
 describe('GET /api/calendar', () => {
   it('returns timeslots', async () => {
     const response = await request(app)

@@ -8,6 +8,14 @@ import request from "supertest";
 import {app} from "../../app";
 import {StatusCodes} from 'http-status-codes';
 
+describe('GET /', () => {
+  it("returns an HTML file", async () => {
+    const req = await request(app)
+      .get('/')
+      .expect('Content-Type', "text/html; charset=UTF-8")
+      .expect(200);
+  })
+})
 
 describe('GET /api/calendar', () => {
   it('returns timeslots', async () => {

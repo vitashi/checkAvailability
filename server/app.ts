@@ -2,6 +2,7 @@ import express from "express";
 import  bodyParser from "body-parser";
 import Users, { User } from "./users/store";
 import morgan from "morgan";
+import calendarRoutes from "./calendar/routes"
 
 
 const path = require('path');
@@ -24,7 +25,7 @@ app.use(morgan(':remote-addr :url :method HTTP/:http-version :user-agent', {
   immediate: true,
   stream: {
     write: (message) => {
-      console.info(`REQUEST :: ${message.trim()}`);
+      console.info(`REQUEST => ${message.trim()}`);
     }
   }
 }));
@@ -33,7 +34,7 @@ app.use(morgan(':remote-addr :url :method HTTP/:http-version :user-agent', {
 app.use(morgan(':remote-addr :url :method :status :res[content-length] :response-time ms', {
   stream: {
     write: (message) => {
-      console.info(`RESPONSE :: ${message.trim()}`);
+      console.info(`RESPONSE => ${message.trim()}`);
     }
   }
 }));
@@ -42,4 +43,4 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(express.static(DIST_DIR));
-app.use(require('./calendar/routes'));
+app.use(calendarRoutes);

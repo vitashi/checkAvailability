@@ -3,7 +3,7 @@
 */
 
 import express from "express";
-import { getEventsForUser } from "./api";
+import { getAvailability } from "./api";
 
 
 const routes = express.Router();
@@ -12,11 +12,11 @@ routes.get('/api/calendar', async (request: express.Request, response: express.R
   const {hostUserId} = request.query
   const userID = typeof hostUserId == "string" ? hostUserId : undefined
 
-  const apiResult = await getEventsForUser(userID)
+  const apiResult = await getAvailability(userID)
   response.status(apiResult.status)
   .json(apiResult.data);
   console.log(`HostUserID: ${hostUserId}, statusCode: ${apiResult.status}, resultMessage: ${apiResult.message}`)
   
 })
 
-module.exports = routes
+export default routes

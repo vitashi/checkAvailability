@@ -14,7 +14,6 @@ export const getSavedEvents = async (userID: string): Promise<TimeSlotBounds[]> 
 export const fillTimeSlots = (startTime: Moment, stopTime: Moment): string[] => {
     const timeSlotArray: string[] = []
     const timeGapInHours: number = stopTime.diff(startTime, 'hours')
-    console.log(timeGapInHours)
 
     if (!(timeGapInHours >= 1)){
         return timeSlotArray

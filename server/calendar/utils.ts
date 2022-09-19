@@ -36,8 +36,8 @@ export const getAvailableTimeSlots = async (hostUserId: string): Promise<string[
 
     for (let index = 0; index < 7; index++) {
         
-        const startDate : Moment = moment().add(1, 'days')  // start from tomorrow
-        const targetDay : Moment = startDate.add(index, 'days')  // increment upto 7 days
+        // start from tomorrow and increment upto 7 days
+        const targetDay : Moment = moment().add(index + 1, 'days')
         const targetDate : number = targetDay.date()
         const dayEvents : TimeSlotBounds[] = groupedEvents[targetDate];  // get day's scheduled events
 

@@ -9,7 +9,7 @@
     "test:unit": "jest --group=unit",
     "start": "concurrently 'npm run client' 'npm run server'",
     "client": "webpack --watch --mode development --entry ./client/index.js",
-    "server": "npx nodemon -x ts-node server/index.js"
+    "server": "npx nodemon -x ts-node server/index.ts"
   },
   "repository": {
     "type": "git",

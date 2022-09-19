@@ -42,24 +42,24 @@ describe("Error handling logic", () => {
 })
 
 describe("getEventsForUser tests", () => {
-    it ("returns the correct object in a successfull scenario", () => {
+    it ("returns the correct object in a successfull scenario", async () => {
         const hostUserID = "host_user_1"
-        const response = getEventsForUser(hostUserID)
+        const response = await getEventsForUser(hostUserID)
         expect(response).toHaveProperty('status')
         expect(response).toHaveProperty('message')
         expect(response.status).toEqual(StatusCodes.OK)
     })
 
-    it ("returns the correct object in a failure scenario", () => {
-        const response = getEventsForUser(undefined)
+    it ("returns the correct object in a failure scenario", async () => {
+        const response = await getEventsForUser(undefined)
         expect(response).toHaveProperty('status')
         expect(response).toHaveProperty('message')
         expect(response.status).toEqual(StatusCodes.BAD_REQUEST)
     })
 
-    it ("A successful request returns correct response schema in the response key", () => {
+    it ("A successful request returns correct response schema in the response key", async () => {
         const hostUserID = "host_user_1"
-        const response = getEventsForUser(hostUserID)
+        const response = await getEventsForUser(hostUserID)
         expect(response.status).toEqual(StatusCodes.OK)
         expect(response.data).toHaveProperty('name')
         expect(response.data).toHaveProperty('timeslotLengthMin')
@@ -74,18 +74,18 @@ describe("validateHostUserID tests", () => {
 
     afterEach(()=> jest.restoreAllMocks())
     
-    it ("A null host user id throws a MalformedQueryError", () => {
-        expect(() => validator.validate(undefined)).toThrow(MalformedQueryError)
+    it ("A null host user id throws a MalformedQueryError", async () => {
+        expect(async () => validator.validate(undefined)).rejects.toThrow(MalformedQueryError)
     })
 
     it ("A non-existant user's request throws a HostUserIDNotFoundError", () => {
         const hostUserID = "non-existant-user"
-        jest.spyOn(validator, "userIDExists").mockReturnValue(false)
-        expect(() => validator.validate(hostUserID)).toThrow(HostUserIDNotFoundError)
+        jest.spyOn(validator, "userIDExists").mockResolvedValue(false)
+        expect(() => validator.validate(hostUserID)).rejects.toThrow(HostUserIDNotFoundError)
     })
 
-    it ("An existing user validation returns void for success", () => {
+    it ("An existing user validation returns void for success", async () => {
         const hostUserID = "host_user_1"
-        expect(validator.validate(hostUserID)).toBeUndefined()
+        expect(await validator.validate(hostUserID)).toBeUndefined()
     })
 })

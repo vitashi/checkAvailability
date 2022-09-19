@@ -1,15 +1,19 @@
+import { users } from "../app"
 import BaseValidator from "../baseValidator"
+import { User } from "../users/store"
 import {MalformedQueryError, HostUserIDNotFoundError} from "./errors"
 
 export default class HostUserIDValidator extends BaseValidator{
 
-    override validate(userID?: string): void{
+    override async validate(userID?: string): Promise<void>{
         if (!userID) throw new MalformedQueryError('Argument <hostUserId> missing in query!')
-        if (!this.userIDExists(userID)) throw new HostUserIDNotFoundError(`hostUserId ${userID} not found`)
+        const userExists = await this.userIDExists(userID)
+        if (!userExists) throw new HostUserIDNotFoundError(`hostUserId ${userID} not found`)
     }
 
-    userIDExists(userID: string): boolean{
-        return true
+    async userIDExists(userID: string): Promise<boolean>{
+        const user = await users.get(userID)
+        return user === undefined ? false : true
     }
 
 }

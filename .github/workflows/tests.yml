@@ -24,3 +24,9 @@ jobs:
 
       - name: Run tests
         run: npm test
+      
+      - name: Run unit tests
+        run: npm run test:unit
+
+      - name: Run integration tests
+        run: npm run test:integration

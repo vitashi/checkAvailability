@@ -13,9 +13,8 @@ routes.get('/api/calendar', async (request: express.Request, response: express.R
   const userID = typeof hostUserId == "string" ? hostUserId : undefined
 
   const apiResult = await getAvailability(userID)
-  response.status(apiResult.status)
-  .json(apiResult.data);
-  console.log(`HostUserID: ${hostUserId}, statusCode: ${apiResult.status}, resultMessage: ${apiResult.message}`)
+  response.status(apiResult.status).json(apiResult.data);
+  console.log(`Response details HostUserID: ${hostUserId}, statusCode: ${apiResult.status}, resultMessage: ${apiResult.message}`)
   
 })
 

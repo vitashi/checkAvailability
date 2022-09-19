@@ -1,3 +1,4 @@
+// @ts-nocheck
 const moment = require('moment');
 const random = require('random');
 const seedrandom = require('seedrandom');
